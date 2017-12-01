@@ -1,3 +1,6 @@
+# Team 418 Ludum Dare 40 starter
+Makes use of [Phaser-typescript-webpack-boilerplate](https://github.com/eduardonunesp/phaser-typescript-webpack-boilerplate)
+
 # Phaser TypeScript Webpack Boilerplate
 
 Start developing your own HTML5 games using [TypeScript](https://www.typescriptlang.org/) and [Phaser.io](http://phaser.io/)
