@@ -1,4 +1,5 @@
 import { Sprite, Game } from "phaser";
+import { Helpers } from "../helpers/helpers";
 
 export class BaseTower extends Sprite {
     private enabled: boolean;
@@ -31,8 +32,9 @@ export class BaseTower extends Sprite {
                 this.placed = true;
             }
         } else if (!this.isPlaced()) {
-            this.x = Math.floor(this.game.input.activePointer.x / 16) * 16;
-            this.y = Math.floor(this.game.input.activePointer.y / 16) * 16;
+            var position = Helpers.alignToGrid(this.game.input.activePointer.position, 16, 16);
+            this.x = position.x;
+            this.y = position.y;
         }
     }
 
