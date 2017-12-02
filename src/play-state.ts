@@ -5,7 +5,7 @@ export class PlayState extends Phaser.State {
     cursors: Phaser.CursorKeys;
     emitter: SwarmParticleEmitter;
     map: Phaser.Tilemap;
-    layer: Phaser.TilemapLayer;
+    layer: any;
 
     constructor() {
         super();
@@ -38,7 +38,19 @@ export class PlayState extends Phaser.State {
         this.game.stage.backgroundColor = '#003663';
         this.emitter = new SwarmParticleEmitter(this.game);
         this.emitter.start();
+
+        this.game.input.onDown.add(this.getTileValueAtMousePointer, this);
     }
+
+    getTileValueAtMousePointer(): number {
+        const x = this.layer.getTileX(this.game.input.activePointer.worldX);
+        const y = this.layer.getTileY(this.game.input.activePointer.worldY);
+
+        const tile = this.map.getTile(x, y, this.layer);
+        console.log(tile.index);
+        return tile.index;
+    }
+
     update() {
         this.game.input.update();
 
