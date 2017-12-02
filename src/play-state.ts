@@ -1,9 +1,11 @@
 import { SwarmParticleEmitter } from './swarm-particle.emitter';
+import { PylonTower } from './towers/pylon.tower';
 
 export class PlayState extends Phaser.State {
     logo: Phaser.Sprite;
     cursors: Phaser.CursorKeys;
     emitter: SwarmParticleEmitter;
+    pylonTower: PylonTower;
 
     constructor() {
         super();
@@ -12,6 +14,7 @@ export class PlayState extends Phaser.State {
     preload() {
         this.game.load.image("logo", "./assets/images/mushroom2.png");
         SwarmParticleEmitter.preload(this.game);
+        PylonTower.preload(this.game);
     }
 
     create() {
@@ -22,6 +25,9 @@ export class PlayState extends Phaser.State {
         this.game.stage.backgroundColor = '#003663';
         this.emitter = new SwarmParticleEmitter(this.game);
         this.emitter.start();
+
+        this.pylonTower = new PylonTower(this.game, 30, 30);
+        this.game.add.existing(this.pylonTower);
     }
     update() {
         this.game.input.update();
