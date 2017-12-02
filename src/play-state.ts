@@ -1,9 +1,11 @@
 import { SwarmParticleEmitter } from './swarm-particle.emitter';
+import { PylonTower } from './towers/pylon.tower';
 
 export class PlayState extends Phaser.State {
     logo: Phaser.Sprite;
     cursors: Phaser.CursorKeys;
     emitter: SwarmParticleEmitter;
+    pylonTower: PylonTower;
     map: Phaser.Tilemap;
     layer: Phaser.TilemapLayer;
 
@@ -16,6 +18,7 @@ export class PlayState extends Phaser.State {
         this.game.load.tilemap('map', '/assets/levels/map1.csv', null, Phaser.Tilemap.CSV);
         this.game.load.image('tiles', '/assets/images/firsttiles.png');
         SwarmParticleEmitter.preload(this.game);
+        PylonTower.preload(this.game);
     }
 
     create() {
@@ -38,6 +41,9 @@ export class PlayState extends Phaser.State {
         this.game.stage.backgroundColor = '#003663';
         this.emitter = new SwarmParticleEmitter(this.game);
         this.emitter.start();
+
+        this.pylonTower = new PylonTower(this.game, 30, 30);
+        this.game.add.existing(this.pylonTower);
     }
     update() {
         this.game.input.update();
