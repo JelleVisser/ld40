@@ -14,7 +14,7 @@ export class SwarmParticleEmitter {
     }
 
     public static preload(game: Phaser.Game) {
-        game.load.image(SwarmParticleEmitter.assetName, "./assets/images/swarm-particle.png");
+        game.load.image(this.assetName, "./assets/images/swarm-particle.png");
     }
 
     public start() {
