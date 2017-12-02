@@ -9,13 +9,13 @@ import { MenuState } from './menu-state';
 import { PlayState } from './play-state';
 
 window.onload = () => {
-  const game = new LdGame();
+    const game = new LdGame();
 };
 
 class LdGame extends Phaser.Game {
-  constructor() {
-    super(Config.width, Config.height, Phaser.AUTO, "content", MenuState);
-    this.state.add("menu", MenuState, false);
-    this.state.add("play", PlayState, false);
-  }
+    constructor() {
+        super(Config.width, Config.height, Phaser.AUTO, "content", MenuState);
+        this.state.add("menu", MenuState, false);
+        this.state.add("play", PlayState, false);
+    }
 }

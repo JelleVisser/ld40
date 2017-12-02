@@ -1,30 +1,50 @@
+import { SwarmParticleEmitter } from './swarm-particle.emitter';
+
 export class PlayState extends Phaser.State {
-  constructor() {
-    super();
-  }
+    logo: Phaser.Sprite;
+    cursors: Phaser.CursorKeys;
+    emitter: SwarmParticleEmitter;
 
-  logo: Phaser.Sprite;
-  cursors: Phaser.CursorKeys;
+    constructor() {
+        super();
+    }
 
-  preload() {
-    this.game.load.image("logo", "./assets/images/mushroom2.png");
-  }
+    preload() {
+        this.game.load.image("logo", "./assets/images/mushroom2.png");
+        SwarmParticleEmitter.preload(this.game);
+    }
 
-  create() {
-    this.logo = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, "logo");
-    this.logo.anchor.setTo(0.5, 0.5);
-    this.cursors = this.game.input.keyboard.createCursorKeys();
-  }
-  update() {
-    this.game.input.update();
+    create() {
+        this.logo = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, "logo");
+        this.logo.anchor.setTo(0.5, 0.5);
+        this.cursors = this.game.input.keyboard.createCursorKeys();
 
-    if (this.cursors.down.isDown)
-      this.logo.position.y += 10;
-    if (this.cursors.up.isDown)
-      this.logo.position.y -= 10;
-    if (this.cursors.left.isDown)
-      this.logo.position.x -= 10;
-    if (this.cursors.right.isDown)
-      this.logo.position.x += 10;
-  }
+        this.game.stage.backgroundColor = '#003663';
+        this.emitter = new SwarmParticleEmitter(this.game);
+        this.emitter.start();
+    }
+    update() {
+        this.game.input.update();
+
+        if (this.cursors.down.isDown)
+            this.logo.position.y += 10;
+        if (this.cursors.up.isDown)
+            this.logo.position.y -= 10;
+        if (this.cursors.left.isDown)
+            this.logo.position.x -= 10;
+        if (this.cursors.right.isDown)
+            this.logo.position.x += 10;
+
+        var hasMoved = (
+            this.cursors.down.isDown ||
+            this.cursors.up.isDown ||
+            this.cursors.left.isDown ||
+            this.cursors.right.isDown);
+
+        if (hasMoved) {
+            this.emitter.setPosition(
+                this.logo.position.x,
+                this.logo.position.y);
+        }
+    }
 }
