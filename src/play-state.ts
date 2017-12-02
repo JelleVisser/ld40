@@ -4,6 +4,8 @@ export class PlayState extends Phaser.State {
     logo: Phaser.Sprite;
     cursors: Phaser.CursorKeys;
     emitter: SwarmParticleEmitter;
+    map: Phaser.Tilemap;
+    layer: Phaser.TilemapLayer;
 
     constructor() {
         super();
@@ -11,10 +13,24 @@ export class PlayState extends Phaser.State {
 
     preload() {
         this.game.load.image("logo", "./assets/images/mushroom2.png");
+        this.game.load.tilemap('map', '/assets/levels/map1.csv', null, Phaser.Tilemap.CSV);
+        this.game.load.image('tiles', '/assets/images/firsttiles.png');
         SwarmParticleEmitter.preload(this.game);
     }
 
     create() {
+        //  Because we're loading CSV map data we have to specify the tile size here or we can't render it
+        this.map = this.game.add.tilemap('map', 16, 16);
+
+        //  Now add in the tileset
+        this.map.addTilesetImage('tiles');
+
+        //  Create our layer
+        this.layer = this.map.createLayer(0);
+
+        //  Resize the world
+        this.layer.resizeWorld();
+
         this.logo = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, "logo");
         this.logo.anchor.setTo(0.5, 0.5);
         this.cursors = this.game.input.keyboard.createCursorKeys();
