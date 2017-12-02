@@ -2,6 +2,8 @@ import { SwarmParticleEmitter } from './swarm-particle.emitter';
 import { PylonTower } from './towers/pylon.tower';
 import { Swarm } from "./swarm";
 import Config from './config';
+import { FactoryHome } from './homes/factory.home';
+import { PuppyHome } from './homes/puppy.home';
 
 export class PlayState extends Phaser.State {
     logo: Phaser.Sprite;
@@ -23,6 +25,8 @@ export class PlayState extends Phaser.State {
         this.game.load.image(Swarm.assetName, '/assets/images/swarm.png');
         SwarmParticleEmitter.preload(this.game);
         PylonTower.preload(this.game);
+        FactoryHome.preload(this.game);
+        PuppyHome.preload(this.game);
     }
 
     create() {
@@ -50,9 +54,16 @@ export class PlayState extends Phaser.State {
         this.pylonTower = new PylonTower(this.game, 30, 30);
         this.game.add.existing(this.pylonTower);
 
+
+        var factoryHome = new FactoryHome(this.game, 100, 100);
+        var puppyHome = new PuppyHome(this.game, 100, 200);
+        this.game.add.existing(factoryHome);
+        this.game.add.existing(puppyHome);
+
         // var testSwarm = new Swarm(this.game, 16, 16, 1);
         // this.game.add.existing(testSwarm);
         this.swarmArray = this.createSwarmArray();
+
     }
 
     createSwarmArray(): Swarm[][] {
