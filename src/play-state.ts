@@ -46,28 +46,26 @@ export class PlayState extends Phaser.State {
 
         this.prepareMap();
 
-        this.logo = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, "logo");
-        this.logo.anchor.setTo(0.5, 0.5);
-        this.cursors = this.game.input.keyboard.createCursorKeys();
-
         this.game.stage.backgroundColor = '#003663';
-        this.emitter = new SwarmParticleEmitter(this.game);
-        this.emitter.start();
 
         this.game.input.onDown.add(this.getTileValueAtMousePointer, this);
         this.pylonTower = new PylonTower(this.game, 30, 30);
         this.game.add.existing(this.pylonTower);
 
-
         var factoryHome = new FactoryHome(this.game, 100, 100);
         var puppyHome = new PuppyHome(this.game, 100, 200);
         this.game.add.existing(factoryHome);
         this.game.add.existing(puppyHome);
+        factoryHome.anchor.set(0.5, 0.5);
+        puppyHome.anchor.set(0.5, 0.5);
+
+        this.emitter = new SwarmParticleEmitter(this.game);
+        this.emitter.setPosition(factoryHome.x, factoryHome.y);
+        this.emitter.start();
 
         // var testSwarm = new Swarm(this.game, 16, 16, 1);
         // this.game.add.existing(testSwarm);
         this.swarmArray = this.createSwarmArray();
-
     }
 
     createSwarmArray(): Swarm[][] {
@@ -154,87 +152,35 @@ export class PlayState extends Phaser.State {
         if (index != indexUp) {
             if (index != indexDown) {
                 if (index != indexLeft) {
-                    if (index != indexRight) {
-                        return 0;
-                    } else {
-                        return 1;
-                    }
+                    return (index != indexRight) ? 0 : 1;
                 } else {
-                    if (index != indexRight) {
-                        return 3;
-                    } else {
-                        return 11;
-                    }
+                    return (index != indexRight) ? 3 : 11;
                 }
             } else {
                 if (index != indexLeft) {
-                    if (index != indexRight) {
-                        return 2;
-                    } else {
-                        return 7;
-                    }
+                    return (index != indexRight) ? 2 : 7;
                 } else {
-                    if (index != indexRight) {
-                        return 8;
-                    } else {
-                        return 13;
-                    }
+                    return (index != indexRight) ? 8 : 13;
                 }
             }
         } else {
             if (index != indexDown) {
                 if (index != indexLeft) {
-                    if (index != indexRight) {
-                        return 4;
-                    } else {
-                        return 6;
-                    }
+                    return (index != indexRight) ? 4 : 6;
                 } else {
-                    if (index != indexRight) {
-                        return 9;
-                    } else {
-                        return 5;
-                    }
+                    return (index != indexRight) ? 9 : 5;
                 }
             } else {
                 if (index != indexLeft) {
-                    if (index != indexRight) {
-                        return 10;
-                    } else {
-                        return 12;
-                    }
+                    return (index != indexRight) ? 10 : 12;
                 } else {
-                    if (index != indexRight) {
-                        return 14;
-                    }
+                    return 14;
                 }
             }
         }
-        return null;
     }
 
     update() {
         this.game.input.update();
-
-        if (this.cursors.down.isDown)
-            this.logo.position.y += 10;
-        if (this.cursors.up.isDown)
-            this.logo.position.y -= 10;
-        if (this.cursors.left.isDown)
-            this.logo.position.x -= 10;
-        if (this.cursors.right.isDown)
-            this.logo.position.x += 10;
-
-        var hasMoved = (
-            this.cursors.down.isDown ||
-            this.cursors.up.isDown ||
-            this.cursors.left.isDown ||
-            this.cursors.right.isDown);
-
-        if (hasMoved) {
-            this.emitter.setPosition(
-                this.logo.position.x,
-                this.logo.position.y);
-        }
     }
 }
