@@ -19,11 +19,10 @@ export class Hud {
             this.baseHud.position.y - this.baseHud.offsetY + this.offset,
             this.getMoneyText(0),
             { font: '20px Arial', fill: '#000' });
-        this.button = new ButtonHud(game, 10, 10, function () {
+        this.button = new ButtonHud(game, this.baseHud.position.x - this.baseHud.offsetX, this.baseHud.position.y + this.baseHud.offsetY + this.baseHud.height + this.offset, function () {
             var newTower = new PylonTower(game, 0, 0);
             game.add.existing(newTower);
         }, this);
-        game.add.existing(this.button);
     }
 
     public setMonies(monies: number) {
