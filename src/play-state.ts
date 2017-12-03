@@ -56,8 +56,6 @@ export class PlayState extends Phaser.State {
         var puppyHome = new PuppyHome(this.game, 100, 200);
         this.game.add.existing(factoryHome);
         this.game.add.existing(puppyHome);
-        factoryHome.anchor.set(0.5, 0.5);
-        puppyHome.anchor.set(0.5, 0.5);
 
         this.emitter = new SwarmParticleEmitter(this.game);
         this.emitter.setPosition(factoryHome.x, factoryHome.y);

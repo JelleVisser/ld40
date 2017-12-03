@@ -10,6 +10,7 @@ export class BaseTower extends Sprite {
         this.game = game;
         this.enabled = isEnabled;
         this.placed = false;
+        this.anchor.set(0.5, 0.5);
     }
 
     public preUpdate() {
