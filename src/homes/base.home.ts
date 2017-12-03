@@ -6,8 +6,7 @@ export class BaseHome extends Sprite {
     constructor(game: Game, x: number, y: number, asset: string) {
         var position = Helpers.alignToGrid(new Point(x, y));
         super(game, position.x, position.y, asset)
+        this.anchor.set(0.5, 0.5);
     }
-
-
 
 }
