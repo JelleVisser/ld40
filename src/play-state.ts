@@ -48,7 +48,6 @@ export class PlayState extends Phaser.State {
 
         this.game.stage.backgroundColor = '#003663';
 
-        this.game.input.onDown.add(this.getTileValueAtMousePointer, this);
         this.pylonTower = new PylonTower(this.game, 30, 30);
         this.game.add.existing(this.pylonTower);
 
@@ -63,8 +62,6 @@ export class PlayState extends Phaser.State {
         this.emitter.setPosition(factoryHome.x, factoryHome.y);
         this.emitter.start();
 
-        // var testSwarm = new Swarm(this.game, 16, 16, 1);
-        // this.game.add.existing(testSwarm);
         this.swarmArray = this.createSwarmArray();
     }
 
@@ -74,22 +71,56 @@ export class PlayState extends Phaser.State {
             var horizontalSlice = [];
             for (var x = 0; x < Config.tilesOnX; x++) {
                 const tile = this.map.getTile(x, y, this.layer);
-                const swarmTile = new Swarm(this.game, x * Config.tileSize, y * Config.tileSize, tile.index);
+                const swarmTile = new Swarm(this.game, x * Config.tileSize, y * Config.tileSize, 0, tile.index);
                 this.game.add.existing(swarmTile);
                 horizontalSlice.push(swarmTile);
             }
             swarmArray.push(horizontalSlice);
         }
+
+        swarmArray[10][10].grow(1);
+        swarmArray[25][25].grow(1);
         return swarmArray;
     }
 
-    getTileValueAtMousePointer(): number {
-        const x = this.layer.getTileX(this.game.input.activePointer.worldX);
-        const y = this.layer.getTileY(this.game.input.activePointer.worldY);
+    updateSwarmArray() {
+        console.log("update swarm array");
+        var clonedArray = [];
+        for (var i = 0; i < this.swarmArray.length; i++) {
+            clonedArray[i] = this.swarmArray[i].map(swarm => swarm.currentHeight);
+        }
 
-        const tile = this.map.getTile(x, y, this.layer);
-        console.log(tile.index);
-        return tile.index;
+        for (var y = 0; y < clonedArray.length; y++) {
+            for (var x = 0; x < clonedArray[y].length; x++) {
+                let clonedSwarmHeight = clonedArray[y][x];
+                //Grow current swarm
+                if (clonedSwarmHeight === 0) {
+                    continue;
+                }
+                let currentSwarm = this.swarmArray[y][x];
+                this.swarmArray[y][x].grow(1);
+
+                var newHeight = currentSwarm.startingHeight + clonedSwarmHeight + 1;
+
+                //Grow left swarm
+                if (clonedArray[y][x - 1] !== undefined /*&& newHeight >= clonedArray[y][x - 1].getTotalHeight()*/) {
+                    this.swarmArray[y][x - 1].grow(1);
+                }
+                //Grow right swarm
+                if (clonedArray[y][x + 1] !== undefined /*&& newHeight >= clonedArray[y][x + 1].getTotalHeight()*/) {
+                    this.swarmArray[y][x + 1].grow(1);
+                }
+
+                //Grow top swarm
+                if (clonedArray[y - 1] !== undefined /*&& newHeight >= clonedArray[y - 1][x].getTotalHeight()*/) {
+                    this.swarmArray[y - 1][x].grow(1);
+                }
+                //Grow bottom swarm
+                if (clonedArray[y + 1] !== undefined /*&& newHeight >= clonedArray[y + 1][x].getTotalHeight()*/) {
+                    this.swarmArray[y + 1][x].grow(1);
+                }
+            }
+        }
     }
 
     prepareMap() {
@@ -180,7 +211,16 @@ export class PlayState extends Phaser.State {
         }
     }
 
+    swarmTimer = 0;
+    swarmUpdateTimer = 10;
+
     update() {
         this.game.input.update();
+
+        this.swarmTimer++;
+        if (this.swarmTimer > this.swarmUpdateTimer) {
+            this.swarmTimer = 0;
+            this.updateSwarmArray();
+        }
     }
 }
