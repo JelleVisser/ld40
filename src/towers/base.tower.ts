@@ -10,6 +10,7 @@ export class BaseTower extends Sprite {
         this.game = game;
         this.enabled = isEnabled;
         this.placed = false;
+        this.anchor.set(0.5, 0.5);
         this.inputEnabled = true;
         this.events.onInputDown.add(this.onClick, this);
     }
@@ -36,11 +37,11 @@ export class BaseTower extends Sprite {
     }
 
     private onClick() {
-        console.log("asddasdas");
         if (!this.isPlaced()) {
             //TODO verify distance to other towers
             this.placed = true;
         } else {
+            //TODO remove this.
             this.placed = false;
         }
     }
