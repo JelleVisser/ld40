@@ -11,6 +11,8 @@ export class BaseTower extends Sprite {
         this.enabled = isEnabled;
         this.placed = false;
         this.anchor.set(0.5, 0.5);
+        this.inputEnabled = true;
+        this.events.onInputDown.add(this.onClick, this);
     }
 
     public preUpdate() {
@@ -27,15 +29,20 @@ export class BaseTower extends Sprite {
     }
 
     private verifyPlacement() {
-        if (this.game.input.activePointer.leftButton.isDown) {
-            if (!this.isPlaced()) {
-                //TODO verify distance to other towers
-                this.placed = true;
-            }
-        } else if (!this.isPlaced()) {
+        if (!this.isPlaced()) {
             var position = Helpers.alignToGrid(this.game.input.activePointer.position, 16, 16);
             this.x = position.x;
             this.y = position.y;
+        }
+    }
+
+    private onClick() {
+        if (!this.isPlaced()) {
+            //TODO verify distance to other towers
+            this.placed = true;
+        } else {
+            //TODO remove this.
+            this.placed = false;
         }
     }
 
