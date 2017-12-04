@@ -4,6 +4,9 @@ import { Swarm } from "./swarm";
 import Config from './config';
 import { FactoryHome } from './homes/factory.home';
 import { PuppyHome } from './homes/puppy.home';
+import { BaseHud } from './hud/base.hud';
+import { Hud } from './hud/hud';
+import { BaseTower } from './towers/base.tower';
 
 export class PlayState extends Phaser.State {
     logo: Phaser.Sprite;
@@ -15,6 +18,10 @@ export class PlayState extends Phaser.State {
     layer: any;
     newLayer: any;
     swarmArray: Swarm[][];
+    hud: Hud;
+    monies: number;
+    swarmTimer = 0;
+    swarmUpdateTimer = 30;
 
     constructor() {
         super();
@@ -29,6 +36,7 @@ export class PlayState extends Phaser.State {
         PylonTower.preload(this.game);
         FactoryHome.preload(this.game);
         PuppyHome.preload(this.game);
+        Hud.preload(this.game);
     }
 
     create() {
@@ -48,21 +56,22 @@ export class PlayState extends Phaser.State {
 
         this.game.stage.backgroundColor = '#003663';
 
-        this.pylonTower = new PylonTower(this.game, 30, 30);
-        this.game.add.existing(this.pylonTower);
+        // this.pylonTower = new PylonTower(this.game, 30, 30);
+        // this.game.add.existing(this.pylonTower);
 
         var factoryHome = new FactoryHome(this.game, 100, 100);
         var puppyHome = new PuppyHome(this.game, 100, 200);
         this.game.add.existing(factoryHome);
         this.game.add.existing(puppyHome);
-        factoryHome.anchor.set(0.5, 0.5);
-        puppyHome.anchor.set(0.5, 0.5);
 
         this.emitter = new SwarmParticleEmitter(this.game);
         this.emitter.setPosition(factoryHome.x, factoryHome.y);
         this.emitter.start();
 
         this.swarmArray = this.createSwarmArray();
+
+        this.monies = 0;
+        this.hud = new Hud(this.game);
     }
 
     createSwarmArray(): Swarm[][] {
@@ -211,10 +220,8 @@ export class PlayState extends Phaser.State {
         }
     }
 
-    swarmTimer = 0;
-    swarmUpdateTimer = 10;
-
     update() {
+        var somethingIsBeingPlaced = this.isAnythingBeingPlaced();
         this.game.input.update();
 
         this.swarmTimer++;
@@ -222,5 +229,21 @@ export class PlayState extends Phaser.State {
             this.swarmTimer = 0;
             this.updateSwarmArray();
         }
+        this.hud.setSomethingIsBeingPlaced(somethingIsBeingPlaced);
+        this.hud.setMonies(this.monies);
+        this.monies += Config.moneyRate;
+    }
+
+    private isAnythingBeingPlaced(): boolean {
+        return this.game.world.children.some(
+            function (x: any) {
+                if (x instanceof BaseTower) {
+                    var tower: BaseTower = x;
+                    if (!tower.isPlaced()) {
+                        return true;
+                    }
+                }
+                return false;
+            });
     }
 }
